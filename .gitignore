@@ -1,0 +1,22 @@
+# segredos
+.env
+
+# python
+__pycache__/
+*.pyc
+
+# logs
+*.log
+
+# jobs / relatorios gerados em runtime (contem dados pessoais de clientes)
+output/
+uploads/
+
+# artefatos de teste soltos na raiz
+camila_final.pdf
+fernanda_final.pdf
+ricardo_final.pdf
+diag_test.pdf
+diag_test.docx
+diag_test2.pdf
+teste_gpt.docx

@@ -1,0 +1,195 @@
+{
+  "name": "Carla Maria de Albuquerque Strafacci",
+  "birth": {
+    "full_name": "Carla Maria de Albuquerque Strafacci",
+    "date": "24 de junho de 1967",
+    "time": "18h45",
+    "place": "Santos, São Paulo, Brasil",
+    "zodiac_system": "Astrologia ocidental tropical",
+    "house_system": "Placidus",
+    "ascendant_label": "20°50' Capricórnio",
+    "midheaven_label": "13°20' Libra"
+  },
+  "ascendant": {"sign": "Capricórnio", "deg": 20, "min": 50},
+  "planets": [
+    {"name": "Ascendente", "sign": "Capricórnio", "deg": 20, "min": 50, "house": "-", "key": "Presença, postura e abordagem da vida"},
+    {"name": "Sol", "sign": "Câncer", "deg": 2, "min": 41, "house": "6ª", "key": "Identidade, vitalidade e propósito cotidiano"},
+    {"name": "Lua", "sign": "Aquário", "deg": 6, "min": 57, "house": "1ª", "key": "Emoção, instinto e imagem espontânea"},
+    {"name": "Mercúrio", "sign": "Câncer", "deg": 21, "min": 55, "house": "7ª", "key": "Pensamento, linguagem e acordos"},
+    {"name": "Vênus", "sign": "Leão", "deg": 18, "min": 0, "house": "8ª", "key": "Afeto, desejo e valores compartilhados"},
+    {"name": "Marte", "sign": "Libra", "deg": 19, "min": 59, "house": "10ª", "key": "Ação, ambição e visibilidade pública"},
+    {"name": "Júpiter", "sign": "Leão", "deg": 5, "min": 56, "house": "7ª", "key": "Expansão por vínculos e alianças"},
+    {"name": "Saturno", "sign": "Áries", "deg": 11, "min": 42, "house": "3ª", "key": "Disciplina mental e base familiar"},
+    {"name": "Urano", "sign": "Virgem", "deg": 20, "min": 36, "house": "9ª", "key": "Originalidade intelectual e visão de mundo"},
+    {"name": "Netuno", "sign": "Escorpião", "deg": 21, "min": 59, "house": "11ª", "key": "Intuição em redes, grupos e ideais"},
+    {"name": "Plutão", "sign": "Virgem", "deg": 18, "min": 9, "house": "9ª", "key": "Transformação por estudo, método e crenças"},
+    {"name": "Nodo Norte", "sign": "Touro", "deg": 5, "min": 12, "house": "4ª", "key": "Caminho de enraizamento e simplicidade"},
+    {"name": "Meio do Céu", "sign": "Libra", "deg": 13, "min": 20, "house": "-", "key": "Vocação, reputação e direção pública"}
+  ],
+  "houses": [
+    {"n": 1, "sign": "Capricórnio", "deg": 20, "min": 50},
+    {"n": 2, "sign": "Aquário", "deg": 14, "min": 49},
+    {"n": 3, "sign": "Peixes", "deg": 11, "min": 55},
+    {"n": 4, "sign": "Áries", "deg": 13, "min": 20},
+    {"n": 5, "sign": "Touro", "deg": 17, "min": 20},
+    {"n": 6, "sign": "Gêmeos", "deg": 20, "min": 24},
+    {"n": 7, "sign": "Câncer", "deg": 20, "min": 50},
+    {"n": 8, "sign": "Leão", "deg": 14, "min": 49},
+    {"n": 9, "sign": "Virgem", "deg": 11, "min": 55},
+    {"n": 10, "sign": "Libra", "deg": 13, "min": 20},
+    {"n": 11, "sign": "Escorpião", "deg": 17, "min": 20},
+    {"n": 12, "sign": "Sagitário", "deg": 20, "min": 24}
+  ],
+  "sections": {
+    "intro_subtitle": "Uma leitura simbólica para orientar reflexão, não um roteiro fechado sobre o futuro.",
+    "intro_observacao": "Este relatório utiliza a linguagem simbólica da astrologia ocidental tropical, com sistema de casas Placidus. As interpretações não constituem previsão científica nem determinam escolhas, acontecimentos ou capacidades. Funcionam como instrumento de autopercepção, reflexão e conversa consigo mesma.",
+    "intro_p1": "Você não é apenas um signo solar. Seu mapa combina a sensibilidade protetora de Câncer, a independência mental de Aquário e a sobriedade estruturante de Capricórnio. Essa mistura sugere alguém que sente profundamente, pensa com liberdade e se apresenta ao mundo com consistência.",
+    "intro_p2": "Leia as páginas seguintes como uma paisagem simbólica. Algumas descrições podem soar imediatas; outras podem ganhar sentido quando relacionadas à sua história. O mapa não encerra possibilidades: organiza perguntas.",
+    "intro_como_aproveitar": "Observe padrões recorrentes, compare-os com sua experiência e use a previsão anual como um convite à consciência. A astrologia é mais útil quando amplia autonomia, discernimento e liberdade de escolha.",
+
+    "dados_nascimento_texto": "O Ascendente em Capricórnio organiza a primeira impressão: você tende a chegar ao mundo com reserva, presença e senso de responsabilidade. O Meio do Céu em Libra sugere uma vocação pública ligada a negociação, estética, equilíbrio e capacidade de aproximar interesses diversos. O eixo Capricórnio–Câncer indica que ambição e necessidade de proteção caminham juntas.",
+
+    "mapa_tecnico_texto": "A roda natal organiza os doze signos no anel externo e as doze casas no anel interno, calculadas a partir do Ascendente em Capricórnio. Os pontos coloridos indicam a posição simbólica de cada planeta; as divisões internas mostram os campos de experiência.",
+
+    "triade_sol": "**SOL EM CÂNCER NA 6ª CASA.** A essência tende a se expressar por cuidado, utilidade, presença cotidiana e atenção ao que pode melhorar. Você pode encontrar sentido quando percebe que sua dedicação tem efeito concreto na vida de alguém, de uma equipe ou de uma estrutura.",
+    "triade_lua": "**LUA EM AQUÁRIO NA 1ª CASA.** No plano emocional, há necessidade de espaço, lucidez e autenticidade. Você pode sentir muito, mas não se entrega facilmente a uma emoção que não consiga compreender — existe uma inteligência afetiva observadora, capaz de acolher sem se dissolver.",
+    "triade_ascendente": "**ASCENDENTE EM CAPRICÓRNIO.** Na presença social, você tende a transmitir compostura, discernimento e confiabilidade — a imagem de alguém que suporta pressão, calcula riscos e não desperdiça energia com superficialidades.",
+    "triade_sintese": "A tríade combina água, ar e terra. Você pode parecer mais controlada do que é por dentro: a reserva capricorniana não elimina a ternura canceriana, apenas escolhe onde e com quem ela será mostrada.",
+
+    "posicoes_texto": "A leitura conjunta mostra forte presença nas casas 7, 8, 9 e 10: uma assinatura de relações relevantes, investimentos emocionais profundos, pensamento crítico e necessidade de construir uma posição pública coerente.",
+
+    "casas_texto": "As casas mostram onde determinadas forças ganham palco. No seu mapa, há ênfase importante nos temas de vínculos, intimidade, conhecimento e direção pública.",
+    "eixo1_title": "Eixo Ascendente–Descendente: Capricórnio e Câncer",
+    "eixo1_text": "Você tende a entrar nas experiências com autonomia e responsabilidade, mas os vínculos pedem proteção, presença e pertencimento.",
+    "eixo2_title": "Eixo Fundo do Céu–Meio do Céu: Áries e Libra",
+    "eixo2_text": "Suas raízes pedem coragem para iniciar; sua direção pública sugere mediação, negociação e senso de forma.",
+
+    "personalidade_subtitle": "Sensibilidade, autonomia e presença estruturada.",
+    "personalidade": [
+      "Você tende a perceber o ambiente antes de se expor. Há um radar emocional ativo, típico do Sol em Câncer, mas ele não se apresenta de modo ingênuo: o Ascendente em Capricórnio mede o contexto e escolhe o momento certo de agir.",
+      "A Lua em Aquário na primeira casa acrescenta independência psicológica. Mesmo envolvida, você precisa preservar uma parte de si que ninguém administra. Não é frieza: é dignidade emocional.",
+      "Existe também capacidade de construir autoridade sem precisar levantar a voz — força para liderar, especialmente onde são necessárias escuta, diplomacia e leitura de interesses diferentes."
+    ],
+    "personalidade_callout": "Você pode unir presença serena, pensamento independente e uma forma muito particular de cuidar. Quando se sente segura, sua força não precisa endurecer: ela se torna orientação.",
+
+    "emocional_subtitle": "Proximidade com autonomia; afeto com dignidade.",
+    "emocional": [
+      "A Lua em Aquário sugere que suas emoções se organizam por compreensão: você tende a precisar nomear o que sente e entender o sentido das relações antes de se entregar completamente.",
+      "Mercúrio e Júpiter na sétima casa valorizam o diálogo e fazem das relações um espaço decisivo de crescimento. Vênus em Leão na oitava casa é calorosa, intensa e seletiva."
+    ],
+    "emocional_callout": "Tendem a funcionar melhor quando há liberdade para pensar, lealdade para permanecer e maturidade para conversar sobre o que é difícil sem transformar cada diferença em ameaça.",
+
+    "comunicacao_subtitle": "Sensibilidade, imaginação e diplomacia sob pressão.",
+    "comunicacao": [
+      "Mercúrio em Câncer sugere uma comunicação que percebe subtexto, tom e intenção. Você pode se lembrar de detalhes que outras pessoas descartam — talento para negociação e leitura de ambiente.",
+      "O trígono entre Mercúrio e Netuno é um dos aspectos mais finos do mapa: imaginação, intuição verbal e facilidade para captar o que ainda não foi formulado. Já a quadratura com Marte mostra que a mente pode se tornar rápida e defensiva quando contrariada."
+    ],
+    "comunicacao_callout": "Quando houver tensão, dê um intervalo entre a primeira reação e a decisão final. Sua percepção é veloz; sua sabedoria aumenta quando a emoção encontra tempo para se organizar.",
+
+    "afeto_subtitle": "Calor e lealdade; encantamento com verdade prática.",
+    "afeto": [
+      "Vênus em Leão expressa afeto por generosidade, presença e reconhecimento. Na oitava casa, essa Vênus não se satisfaz com aparência: o desejo de proximidade é profundo e seletivo.",
+      "O sextil entre Vênus e Marte favorece magnetismo e capacidade de iniciativa afetiva. Já a quadratura com Netuno pede cuidado com idealizações: manter a poesia, mas verificar a realidade."
+    ],
+    "afeto_callout": "Você tende a florescer em relações que combinam generosidade, admiração e confidência. O vínculo ideal não reduz sua potência: ele a acompanha.",
+
+    "carreira_subtitle": "Mediação, método e senso de forma.",
+    "carreira": [
+      "O Meio do Céu em Libra sugere que sua imagem pública cresce quando você ocupa lugares de conexão. Marte na décima casa, em Libra, adiciona ambição e presença competitiva: você prefere vencer sem destruir a ponte.",
+      "O Sol em Câncer na sexta casa complementa essa vocação pela via do serviço qualificado. Urano e Plutão em Virgem, na nona casa, indicam uma mente que se transforma pela investigação e o método."
+    ],
+    "carreira_callout": "Seu mapa sugere realização quando sua capacidade de conciliar pessoas encontra uma causa prática — sensibilidade, critério e estratégia a serviço de um projeto que precisa de forma.",
+
+    "talentos": [
+      {"lead": "Leitura emocional sofisticada.", "text": "Você compreende pessoas e climas sem precisar de explicações excessivas."},
+      {"lead": "Confiabilidade e resistência.", "text": "O Ascendente em Capricórnio favorece constância, discrição e sustentação de responsabilidades."},
+      {"lead": "Diplomacia estratégica.", "text": "Marte e Meio do Céu em Libra favorecem negociar, mediar e construir consenso."},
+      {"lead": "Imaginação aplicada.", "text": "Mercúrio em trígono com Netuno une sensibilidade verbal e intuição."},
+      {"lead": "Calor afetivo com presença.", "text": "Vênus e Júpiter em Leão ampliam generosidade e talento para valorizar o que importa."},
+      {"lead": "Inteligência de sistema.", "text": "Urano e Plutão em Virgem indicam disposição para reorganizar, pesquisar e refinar."}
+    ],
+    "talentos_callout": "Traduzir profundidade em presença. Você tem uma capacidade rara de fazer com que as pessoas se sintam vistas — desde que não coloque essa responsabilidade inteira sobre os próprios ombros.",
+
+    "crescimento": [
+      {"title": "REVER A RELAÇÃO COM O CONTROLE", "text": "O Ascendente em Capricórnio e Saturno forte podem fazer você se sentir mais segura antecipando e organizando tudo. Há momentos em que o crescimento pede abertura."},
+      {"title": "CUIDADO COM A IDEALIZAÇÃO", "text": "Vênus em quadratura com Netuno pode fazer você reconhecer potencial em situações que ainda não demonstraram consistência."},
+      {"title": "DESACELERAR A RESPOSTA MENTAL", "text": "Mercúrio em tensão com Marte oferece coragem para argumentar — mas nem toda provocação exige resposta imediata."},
+      {"title": "PERMITIR A PROXIMIDADE", "text": "A Lua em Aquário pode se proteger pela distância. O crescimento pede não fechar a porta para quem merece proximidade."}
+    ],
+
+    "aspectos_harmonicos": [
+      {"aspecto": "Mercúrio trígono Netuno", "orbe": "0.1°"},
+      {"aspecto": "Mercúrio sextil Urano", "orbe": "1.3°"},
+      {"aspecto": "Vênus sextil Marte", "orbe": "2.0°"},
+      {"aspecto": "Urano conjunção Plutão", "orbe": "2.5°"},
+      {"aspecto": "Sol sextil Nodo Norte", "orbe": "2.5°"},
+      {"aspecto": "Júpiter trígono Saturno", "orbe": "5.8°"},
+      {"aspecto": "Mercúrio sextil Plutão", "orbe": "3.8°"}
+    ],
+    "aspectos_harmonicos_texto": "Mercúrio em trígono com Netuno oferece uma inteligência que trabalha por associações, imagens e sensibilidade. O sextil entre Vênus e Marte adiciona capacidade de transformar desejo em movimento, sem abrir mão de forma e respeito.",
+
+    "aspectos_tensos": [
+      {"aspecto": "Lua oposição Júpiter", "orbe": "1.0°"},
+      {"aspecto": "Lua quadratura Nodo Norte", "orbe": "1.8°"},
+      {"aspecto": "Mercúrio quadratura Marte", "orbe": "2.0°"},
+      {"aspecto": "Vênus quadratura Netuno", "orbe": "4.0°"},
+      {"aspecto": "Júpiter quadratura Nodo Norte", "orbe": "0.7°"}
+    ],
+    "aspectos_tensos_texto": "A oposição Lua–Júpiter cria uma natureza generosa e um desejo de grandeza emocional. Mercúrio em quadratura com Marte coloca em diálogo sensibilidade e assertividade — talento para negociações difíceis quando a urgência encontra timing.",
+
+    "previsao_subtitle": "De junho de 2026 a junho de 2027: expansão relacional, maturidade e transformação emocional.",
+    "previsao_overview": [
+      "A leitura de trânsitos descreve climas simbólicos, não acontecimentos inevitáveis. No próximo ano, seu mapa tende a ser mobilizado por expansão relacional, revisão de estruturas e amadurecimento emocional.",
+      "**JÚPITER EM LEÃO** ativa seu campo de relações e valores compartilhados, com atenção a expectativas exageradas.",
+      "**SATURNO RETORNA** a uma posição importante do seu mapa natal, pedindo revisão de compromissos e bases domésticas.",
+      "**NETUNO EM QUADRATURA AO SOL** pode sugerir uma fase de maior sensibilidade e questionamento sobre rotina e propósito.",
+      "**PLUTÃO TOCA SUA LUA** a partir do primeiro semestre de 2027, indicando transformação emocional e renascimento na forma de se apresentar ao mundo."
+    ],
+
+    "trimestres": [
+      {
+        "eyebrow": "PREVISÃO - 1º TRIMESTRE", "subtitle": "JULHO A SETEMBRO DE 2026",
+        "p1": "No fim de julho, Júpiter retorna ao ponto que ocupava em seu nascimento, inaugurando um novo ciclo de doze anos de crescimento em Leão e na sétima casa: alianças, contratos, parcerias e a pergunta sobre com quem vale a pena construir o próximo capítulo.",
+        "p2": "Entre agosto e setembro, Júpiter forma bons aspectos com Saturno natal e toca Vênus em Leão — janela favorável para conciliar prazer e responsabilidade, e reposicionar imagem e rede de confiança.",
+        "opp_title": "Oportunidade do período", "opp_text": "Fortalecer alianças que tenham calor e projeto, com critérios claros sobre responsabilidades, dinheiro e reciprocidade.",
+        "dec_title": "Decisão prática", "dec_text": "Antes de aceitar novos compromissos, observe se eles ampliam sua vida ou apenas ocupam agenda."
+      },
+      {
+        "eyebrow": "PREVISÃO - 2º TRIMESTRE", "subtitle": "OUTUBRO A DEZEMBRO DE 2026",
+        "p1": "Outubro traz Júpiter em quadratura com Netuno natal, tocando também seu Sol em Câncer — pode ampliar sonhos e vontade de mudar de direção, mas pede cuidado com decisões tomadas por cansaço.",
+        "p2": "No fim de setembro, Saturno retorna ao seu ponto natal em Áries: um ciclo de maturidade, consolidando responsabilidades que fazem sentido e liberando obrigações que só sobrevivem por medo de decepcionar.",
+        "opp_title": "Oportunidade do período", "opp_text": "Revisar método, linguagem e prioridades; um trimestre que favorece decisões que diminuem ruído.",
+        "dec_title": "Cuidado necessário", "dec_text": "Evite transformar cansaço em certeza definitiva sobre pessoas ou caminhos."
+      },
+      {
+        "eyebrow": "PREVISÃO - 3º TRIMESTRE", "subtitle": "JANEIRO A MARÇO DE 2027",
+        "p1": "O início de 2027 retoma os temas de outubro com maior consciência: Netuno volta a tensionar o Sol enquanto Júpiter revisita Vênus em Leão, trazendo prazer e possíveis reconciliações.",
+        "p2": "Em fevereiro, Plutão se opõe ao seu Júpiter natal e se aproxima da Lua: pode sinalizar mudança na forma de escolher parceiros e reconhecer desejos antes em segundo plano.",
+        "opp_title": "Relações e emoção", "opp_text": "Transparência é uma forma de afeto; a pergunta central é o que você quer continuar construindo porque tem valor.",
+        "dec_title": "Decisão prática", "dec_text": "Teste novidades em escala controlada, preservando liberdade de correção."
+      },
+      {
+        "eyebrow": "PREVISÃO - 4º TRIMESTRE", "subtitle": "ABRIL A JUNHO DE 2027",
+        "p1": "Abril concentra movimentos importantes: Saturno forma trígono com sua Vênus natal e oposição a Marte, pedindo simultaneamente compromisso e limite.",
+        "p2": "Plutão toca sua Lua natal entre abril e junho, enquanto Urano forma trígono com ela em meados de junho: combinação intensa e libertadora, com abertura para novos modos de viver.",
+        "opp_title": "Síntese do ciclo", "opp_text": "A mudança mais profunda não precisa ser dramática — pode aparecer quando você diz 'não' sem culpa e 'sim' sem se justificar.",
+        "dec_title": "Decisão prática", "dec_text": "No fim do período, Júpiter volta a ativar Vênus e Marte por bons aspectos: bom momento para retomar prazer e investimento pessoal."
+      }
+    ],
+
+    "sintese_final": [
+      "O mapa de Carla reúne uma combinação marcante de Água, Ar e Terra. Câncer oferece sensibilidade e cuidado. Aquário amplia independência emocional. Capricórnio dá forma, presença e capacidade de sustentar o que é importante.",
+      "Você pode ser chamada, muitas vezes, a conciliar o que parece oposto: proximidade e liberdade, ternura e limite, encanto e lucidez. Essa não é uma contradição a ser eliminada — é a matéria-prima de uma maturidade muito particular.",
+      "Nos próximos meses, os ciclos sugerem expansão e transformação. O resultado mais fértil tende a vir quando você não tenta controlar o processo inteiro, mas assume a responsabilidade por aquilo que é verdadeiramente seu."
+    ],
+    "sintese_quote": "“Você une delicadeza e firmeza, razão e intuição,\ntransformando profundidade em presença.”",
+
+    "apendice_texto": "Os dados abaixo registram a estrutura técnica que serviu de base à interpretação. Pequenas variações podem ocorrer entre programas astrológicos conforme efemérides e convenções de cálculo.",
+
+    "nota_final": [
+      "A astrologia oferece símbolos. A sua vida oferece a história, as escolhas, os vínculos, os aprendizados e a liberdade de transformar qualquer tendência em consciência. Nada neste relatório substitui sua experiência: ele apenas propõe imagens para que você possa observá-la por outro ângulo.",
+      "Que este mapa seja uma lembrança de que sensibilidade não precisa significar exposição, de que independência não exige distância afetiva e de que pedir cuidado pode ser uma forma sofisticada de força."
+    ],
+    "nota_quote": "“Você une delicadeza e firmeza, razão e intuição,\ntransformando profundidade em presença.”"
+  }
+}
