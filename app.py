@@ -18,6 +18,7 @@ import uuid
 
 import pythoncom
 from flask import Flask, request, render_template_string, send_file, jsonify
+from flask_cors import CORS
 from docx2pdf import convert as _docx_to_pdf
 
 from chart_engine import compute_chart
@@ -30,6 +31,11 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
+
+# ALLOWED_ORIGINS: lista separada por virgula (ex: "https://azimute.com.br,https://staging.azimute.com.br").
+# Default "*" para nao travar a integracao enquanto o dominio final do frontend nao esta definido.
+_allowed_origins = os.environ.get("ALLOWED_ORIGINS", "*")
+CORS(app, origins=[o.strip() for o in _allowed_origins.split(",")])
 
 JOBS = {}  # job_id -> {"status": "...", "step": "", "progress": (i,n), "error": None, "filename": None}
 
@@ -378,7 +384,8 @@ def status(job_id):
     job = JOBS.get(job_id)
     if not job:
         return jsonify({"status": "error", "error": "job não encontrado"}), 404
-    return jsonify(job)
+    public_fields = ("status", "progress", "step", "error", "filename")
+    return jsonify({k: job[k] for k in public_fields if k in job})
 
 @app.route("/download/<job_id>")
 def download(job_id):
