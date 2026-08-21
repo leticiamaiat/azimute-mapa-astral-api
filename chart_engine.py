@@ -279,6 +279,7 @@ def compute_chart(name, date_str, time_str, place_text, lat=None, lon=None):
         "planets": planet_rows,
         "houses": houses_out,
         "aspects": aspects,
+        "cusps": cusps,
     }
 
 # ------------------------------------------------------------------ aspects
@@ -302,6 +303,7 @@ def compute_aspects(planet_rows):
                 if orb <= orb_max:
                     found.append({
                         "aspecto": f'{a["name"]} {asp_name} {b["name"]}',
+                        "a": a["name"], "b": b["name"], "tipo": asp_name,
                         "orbe": f'{orb:.1f}°',
                         "orbe_val": orb,
                         "harmonico": asp_name in ("sextil", "trígono"),
@@ -309,3 +311,35 @@ def compute_aspects(planet_rows):
                     break
     found.sort(key=lambda x: x["orbe_val"])
     return found
+
+def compute_synastry_aspects(planets_a, planets_b):
+    """Aspectos ENTRE dois mapas distintos (ex: tutor x pet), em vez de dentro
+    de um unico mapa como `compute_aspects`. Compara todo par (planeta de A,
+    planeta de B) sem excluir combinacoes repetidas, ja que vem de mapas
+    diferentes."""
+    usable_a = [p for p in planets_a if p["name"] not in ("Ascendente", "Meio do Céu")]
+    usable_b = [p for p in planets_b if p["name"] not in ("Ascendente", "Meio do Céu")]
+    found = []
+    for a in usable_a:
+        for b in usable_b:
+            diff = abs(a["longitude"] - b["longitude"]) % 360
+            if diff > 180:
+                diff = 360 - diff
+            for asp_name, angle, orb_max in ASPECTS_DEF:
+                orb = abs(diff - angle)
+                if orb <= orb_max:
+                    found.append({
+                        "aspecto": f'{a["name"]} (A) {asp_name} {b["name"]} (B)',
+                        "orbe": f'{orb:.1f}°',
+                        "orbe_val": orb,
+                        "harmonico": asp_name in ("sextil", "trígono"),
+                    })
+                    break
+    found.sort(key=lambda x: x["orbe_val"])
+    return found
+
+def compute_house_overlay(planets_a, cusps_b):
+    """Para cada planeta de A (ex: tutor), em qual casa do mapa de B (ex: pet)
+    ele cai -- e vice-versa, chamando com os argumentos trocados."""
+    usable = [p for p in planets_a if p["name"] not in ("Ascendente", "Meio do Céu")]
+    return [{"planet": p["name"], "house_in_b": _which_house(p["longitude"], cusps_b)} for p in usable]

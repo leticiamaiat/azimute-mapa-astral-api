@@ -21,9 +21,10 @@ from flask import Flask, request, render_template_string, send_file, jsonify
 from flask_cors import CORS
 from docx2pdf import convert as _docx_to_pdf
 
-from chart_engine import compute_chart
-from openai_engine import generate_full_sections, DEFAULT_MODEL
-from report_engine import build_docx_bytes
+from chart_engine import compute_chart, compute_synastry_aspects, compute_house_overlay
+from openai_engine import generate_full_sections, generate_pet_synastry_sections, DEFAULT_MODEL
+from report_engine import build_docx_bytes, build_pet_synastry_docx_bytes
+from image_style_engine import stylize_cover_photo
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
@@ -99,6 +100,7 @@ PAGE = """
   .plan{ background:linear-gradient(180deg, rgba(201,162,75,.07), rgba(201,162,75,.02)); border:1px solid var(--line);
     border-radius:10px; padding:20px 18px; text-align:center; font-family:'Segoe UI',system-ui,sans-serif; }
   .plan.active{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; }
+  .plan:not(.soon){ cursor:pointer; }
   .plan .name{ font-family:Georgia,serif; font-size:16px; color:#fff; margin-bottom:6px; }
   .plan .price{ font-size:20px; color:var(--gold-soft); font-weight:bold; margin-bottom:8px; }
   .plan .desc{ font-size:12px; color:var(--sub); line-height:1.5; }
@@ -160,10 +162,16 @@ PAGE = """
     <h2>Planos</h2>
     <div class="section-sub">Escolha o relatório que combina com o seu momento.</div>
     <div class="plans">
-      <div class="plan active">
+      <div class="plan active" data-report-type="individual">
         <div class="name">Mapa Astral Completo</div>
         <div class="price">R$ 49,90</div>
         <div class="desc">25 páginas, roda natal técnica, tríade, casas, aspectos e previsão anual — gerado agora mesmo.</div>
+        <div class="tag">Disponível</div>
+      </div>
+      <div class="plan" data-report-type="sinastria_pet">
+        <div class="name">Sinastria com Pet</div>
+        <div class="price">R$ 49,90</div>
+        <div class="desc">19 páginas cruzando o seu mapa com o do seu pet — vínculo, aspectos e casas compartilhadas.</div>
         <div class="tag">Disponível</div>
       </div>
       <div class="plan soon">
@@ -219,6 +227,44 @@ PAGE = """
         <input type="file" name="cover" accept="image/*">
         <div class="hint">Se não enviar, uma capa navy/dourada é gerada automaticamente.</div>
 
+        <input type="hidden" name="report_type" id="report_type" value="individual">
+
+        <div id="pet-fields" style="display:none;">
+          <div class="row" style="margin-top:6px;">
+            <div style="flex:2 1 220px;">
+              <label>Nome do pet</label>
+              <input type="text" name="pet_name" placeholder="Ex: Rex">
+            </div>
+            <div>
+              <label>Raça</label>
+              <input type="text" name="pet_breed" placeholder="Ex: Vira-lata caramelo">
+            </div>
+            <div>
+              <label>Cor</label>
+              <input type="text" name="pet_color" placeholder="Ex: Caramelo">
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Data de nascimento do pet</label>
+              <input type="date" name="pet_date">
+            </div>
+            <div>
+              <label>Horário de nascimento do pet</label>
+              <input type="time" name="pet_time">
+            </div>
+          </div>
+          <div class="hint">Se não souber o horário exato (comum em adoções), deixe em branco — usaremos meio-dia como estimativa e o relatório vai indicar isso.</div>
+
+          <label>Local de nascimento/adoção do pet</label>
+          <input type="text" name="pet_place" placeholder="Cidade, Estado, País">
+          <div class="hint">Se não souber a cidade exata (ex: resgatado na rua), use a cidade onde foi encontrado ou adotado.</div>
+
+          <label>Fotografia do pet para a arte personalizada (opcional)</label>
+          <input type="file" name="pet_cover" accept="image/*">
+        </div>
+
         <div class="consent">
           <input type="checkbox" id="consent" required>
           <label for="consent" style="text-transform:none; font-weight:normal; color:var(--sub); margin:0;">
@@ -231,18 +277,9 @@ PAGE = """
       <div id="status">
         <div id="status-text">Iniciando…</div>
         <div id="bar"><div id="bar-fill"></div></div>
-        <div class="hint" id="status-hint">O texto de cada seção é escrito por um modelo local — isso leva alguns minutos.</div>
+        <div class="hint" id="status-hint"></div>
       </div>
       <div id="err" class="flash" style="display:none;"></div>
-    </div>
-  </section>
-
-  <section id="lgpd">
-    <h2>Privacidade</h2>
-    <div class="trust">
-      <div><span>✓</span>Dados usados apenas para gerar o seu relatório</div>
-      <div><span>✓</span>Processamento local, sem serviços de IA de terceiros</div>
-      <div><span>✓</span>Conforme a LGPD</div>
     </div>
   </section>
 </main>
@@ -256,6 +293,27 @@ const statusBox = document.getElementById('status');
 const statusText = document.getElementById('status-text');
 const barFill = document.getElementById('bar-fill');
 const errBox = document.getElementById('err');
+
+const planCards = document.querySelectorAll('.plan[data-report-type]');
+const reportTypeInput = document.getElementById('report_type');
+const petFields = document.getElementById('pet-fields');
+const petRequiredNames = ['pet_name', 'pet_date', 'pet_place'];
+
+function selectPlan(card) {
+  planCards.forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  const type = card.dataset.reportType;
+  reportTypeInput.value = type;
+  const isPet = type === 'sinastria_pet';
+  petFields.style.display = isPet ? 'block' : 'none';
+  petRequiredNames.forEach(name => {
+    const el = form.elements[name];
+    if (el) el.required = isPet;
+  });
+  btn.textContent = isPet ? 'Gerar minha sinastria com pet' : 'Gerar meu mapa astral';
+}
+
+planCards.forEach(card => card.addEventListener('click', () => selectPlan(card)));
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -284,14 +342,22 @@ form.addEventListener('submit', async (e) => {
       barFill.style.width = Math.round(100 * i / n) + '%';
     } else if (d.status === 'chart') {
       statusText.textContent = 'Calculando posições planetárias e casas...';
+    } else if (d.status === 'styling') {
+      statusText.textContent = 'Estilizando sua fotografia para a arte da capa...';
     } else if (d.status === 'rendering') {
       statusText.textContent = 'Montando o PDF final...';
       barFill.style.width = '100%';
     } else if (d.status === 'done') {
       clearInterval(poll);
-      statusText.textContent = 'Pronto! Baixando...';
+      statusText.textContent = (d.has_image || d.has_pet_image) ? 'Pronto! Baixando o PDF e as imagens estilizadas...' : 'Pronto! Baixando...';
       barFill.style.width = '100%';
       window.location = '/download/' + jobId;
+      if (d.has_image) {
+        setTimeout(() => { window.location = '/download/' + jobId + '/imagem'; }, 900);
+      }
+      if (d.has_pet_image) {
+        setTimeout(() => { window.location = '/download/' + jobId + '/imagem_pet'; }, 1800);
+      }
       btn.disabled = false;
     } else if (d.status === 'error') {
       clearInterval(poll);
@@ -316,6 +382,17 @@ def _run_job(job_id, name, date_str, time_str, place, cover_path):
         JOBS[job_id]["status"] = "chart"
         chart = compute_chart(name, date_str, time_str, place)
 
+        styled_image_path = None
+        if cover_path:
+            JOBS[job_id]["status"] = "styling"
+            try:
+                styled_image_path = os.path.join(os.path.dirname(cover_path), "foto_estilizada.png")
+                stylize_cover_photo(cover_path, styled_image_path)
+                cover_path = styled_image_path
+            except Exception:
+                traceback.print_exc()
+                styled_image_path = None  # segue com a foto original, sem estilizacao
+
         def progress_cb(i, n, label):
             JOBS[job_id]["status"] = "running"
             JOBS[job_id]["progress"] = (i, n)
@@ -329,8 +406,10 @@ def _run_job(job_id, name, date_str, time_str, place, cover_path):
             "ascendant": chart["ascendant"],
             "planets": chart["planets"],
             "houses": chart["houses"],
+            "aspects": chart["aspects"],
             "sections": sections,
         }
+        JOBS[job_id]["data"] = data
         JOBS[job_id]["status"] = "rendering"
         docx_bytes = build_docx_bytes(data, cover_image_path=cover_path)
         base_name = slugify(name)
@@ -342,6 +421,106 @@ def _run_job(job_id, name, date_str, time_str, place, cover_path):
         pdf_path = os.path.join(OUTPUT_DIR, f"{job_id}_{pdf_filename}")
         _docx_to_pdf_safe(docx_path, pdf_path)
         os.remove(docx_path)
+
+        if styled_image_path:
+            image_filename = f"Foto_Estilizada_{base_name}.png"
+            image_path = os.path.join(OUTPUT_DIR, f"{job_id}_{image_filename}")
+            os.replace(styled_image_path, image_path)
+            JOBS[job_id]["image_filename"] = image_filename
+            JOBS[job_id]["image_path"] = image_path
+
+        JOBS[job_id]["status"] = "done"
+        JOBS[job_id]["filename"] = pdf_filename
+        JOBS[job_id]["path"] = pdf_path
+    except Exception as e:
+        traceback.print_exc()
+        JOBS[job_id]["status"] = "error"
+        JOBS[job_id]["error"] = str(e)
+    finally:
+        pythoncom.CoUninitialize()
+
+def _run_job_pet_synastry(job_id, name, date_str, time_str, place, cover_path, pet_fields, pet_cover_path):
+    pythoncom.CoInitialize()
+    try:
+        JOBS[job_id]["status"] = "chart"
+        owner_chart = compute_chart(name, date_str, time_str, place)
+        pet_chart = compute_chart(pet_fields["name"], pet_fields["date"], pet_fields["time"], pet_fields["place"])
+        pet_chart["breed"] = pet_fields["breed"]
+        pet_chart["color"] = pet_fields["color"]
+        pet_chart["time_estimated"] = pet_fields["time_estimated"]
+
+        styled_owner_path = None
+        if cover_path:
+            JOBS[job_id]["status"] = "styling"
+            try:
+                styled_owner_path = os.path.join(os.path.dirname(cover_path), "foto_estilizada_tutor.png")
+                stylize_cover_photo(cover_path, styled_owner_path, subject="pessoa")
+                cover_path = styled_owner_path
+            except Exception:
+                traceback.print_exc()
+                styled_owner_path = None  # segue com a foto original, sem estilizacao
+
+        styled_pet_path = None
+        if pet_cover_path:
+            JOBS[job_id]["status"] = "styling"
+            try:
+                styled_pet_path = os.path.join(os.path.dirname(pet_cover_path), "foto_estilizada_pet.png")
+                stylize_cover_photo(pet_cover_path, styled_pet_path, subject="pet")
+                pet_cover_path = styled_pet_path
+            except Exception:
+                traceback.print_exc()
+                styled_pet_path = None
+
+        cross_aspects = compute_synastry_aspects(owner_chart["planets"], pet_chart["planets"])
+        house_overlay_owner = compute_house_overlay(owner_chart["planets"], pet_chart["cusps"])
+        house_overlay_pet = compute_house_overlay(pet_chart["planets"], owner_chart["cusps"])
+
+        def progress_cb(i, n, label):
+            JOBS[job_id]["status"] = "running"
+            JOBS[job_id]["progress"] = (i, n)
+            JOBS[job_id]["step"] = label
+
+        sections = generate_pet_synastry_sections(
+            owner_chart, pet_chart, cross_aspects, house_overlay_owner, house_overlay_pet,
+            model=DEFAULT_MODEL, progress_cb=progress_cb,
+        )
+
+        data = {
+            "owner": owner_chart,
+            "pet": pet_chart,
+            "cross_aspects": cross_aspects,
+            "house_overlay_owner": house_overlay_owner,
+            "house_overlay_pet": house_overlay_pet,
+            "sections": sections,
+        }
+        JOBS[job_id]["data"] = data
+        JOBS[job_id]["status"] = "rendering"
+        docx_bytes = build_pet_synastry_docx_bytes(data, owner_cover_path=cover_path, pet_cover_path=pet_cover_path)
+
+        base_owner = slugify(name)
+        base_pet = slugify(pet_fields["name"])
+        docx_path = os.path.join(OUTPUT_DIR, f"{job_id}_Relatorio_Sinastria_Pet_{base_owner}_{base_pet}.docx")
+        with open(docx_path, "wb") as f:
+            f.write(docx_bytes)
+
+        pdf_filename = f"Relatorio_Sinastria_Pet_{base_owner}_{base_pet}.pdf"
+        pdf_path = os.path.join(OUTPUT_DIR, f"{job_id}_{pdf_filename}")
+        _docx_to_pdf_safe(docx_path, pdf_path)
+        os.remove(docx_path)
+
+        if styled_owner_path:
+            image_filename = f"Foto_Estilizada_{base_owner}.png"
+            image_path = os.path.join(OUTPUT_DIR, f"{job_id}_{image_filename}")
+            os.replace(styled_owner_path, image_path)
+            JOBS[job_id]["image_filename"] = image_filename
+            JOBS[job_id]["image_path"] = image_path
+
+        if styled_pet_path:
+            pet_image_filename = f"Foto_Estilizada_{base_pet}.png"
+            pet_image_path = os.path.join(OUTPUT_DIR, f"{job_id}_{pet_image_filename}")
+            os.replace(styled_pet_path, pet_image_path)
+            JOBS[job_id]["pet_image_filename"] = pet_image_filename
+            JOBS[job_id]["pet_image_path"] = pet_image_path
 
         JOBS[job_id]["status"] = "done"
         JOBS[job_id]["filename"] = pdf_filename
@@ -359,12 +538,32 @@ def index():
 
 @app.route("/start", methods=["POST"])
 def start():
+    report_type = request.form.get("report_type", "individual").strip() or "individual"
+    if report_type not in ("individual", "sinastria_pet"):
+        report_type = "individual"
+
     name = request.form.get("name", "").strip()
     date_str = request.form.get("date", "").strip()
     time_str = request.form.get("time", "").strip()
     place = request.form.get("place", "").strip()
     if not all([name, date_str, time_str, place]):
         return jsonify({"error": "Preencha nome, data, hora e local."}), 400
+
+    pet_fields = None
+    if report_type == "sinastria_pet":
+        pet_name = request.form.get("pet_name", "").strip()
+        pet_breed = request.form.get("pet_breed", "").strip()
+        pet_color = request.form.get("pet_color", "").strip()
+        pet_date_str = request.form.get("pet_date", "").strip()
+        pet_time_str = request.form.get("pet_time", "").strip()
+        pet_place = request.form.get("pet_place", "").strip()
+        if not all([pet_name, pet_date_str, pet_place]):
+            return jsonify({"error": "Preencha nome, data e local do pet."}), 400
+        pet_fields = {
+            "name": pet_name, "breed": pet_breed, "color": pet_color,
+            "date": pet_date_str, "time": pet_time_str or "12:00",
+            "time_estimated": not bool(pet_time_str), "place": pet_place,
+        }
 
     cover_path = None
     file = request.files.get("cover")
@@ -373,9 +572,22 @@ def start():
         cover_path = os.path.join(tmp_dir, file.filename)
         file.save(cover_path)
 
+    pet_cover_path = None
+    if pet_fields is not None:
+        pet_file = request.files.get("pet_cover")
+        if pet_file and pet_file.filename:
+            pet_tmp_dir = tempfile.mkdtemp(prefix="pet_cover_")
+            pet_cover_path = os.path.join(pet_tmp_dir, pet_file.filename)
+            pet_file.save(pet_cover_path)
+
     job_id = uuid.uuid4().hex[:12]
     JOBS[job_id] = {"status": "queued", "progress": (0, 1), "step": "", "error": None}
-    t = threading.Thread(target=_run_job, args=(job_id, name, date_str, time_str, place, cover_path), daemon=True)
+    if pet_fields is not None:
+        t = threading.Thread(target=_run_job_pet_synastry,
+                              args=(job_id, name, date_str, time_str, place, cover_path, pet_fields, pet_cover_path),
+                              daemon=True)
+    else:
+        t = threading.Thread(target=_run_job, args=(job_id, name, date_str, time_str, place, cover_path), daemon=True)
     t.start()
     return jsonify({"job_id": job_id})
 
@@ -385,7 +597,10 @@ def status(job_id):
     if not job:
         return jsonify({"status": "error", "error": "job não encontrado"}), 404
     public_fields = ("status", "progress", "step", "error", "filename")
-    return jsonify({k: job[k] for k in public_fields if k in job})
+    payload = {k: job[k] for k in public_fields if k in job}
+    payload["has_image"] = "image_path" in job
+    payload["has_pet_image"] = "pet_image_path" in job
+    return jsonify(payload)
 
 @app.route("/download/<job_id>")
 def download(job_id):
@@ -393,6 +608,33 @@ def download(job_id):
     if not job or job.get("status") != "done":
         return "Relatório ainda não está pronto.", 400
     return send_file(job["path"], as_attachment=True, download_name=job["filename"], mimetype="application/pdf")
+
+@app.route("/download/<job_id>/imagem")
+def download_image(job_id):
+    job = JOBS.get(job_id)
+    if not job or job.get("status") != "done":
+        return "Relatório ainda não está pronto.", 400
+    if "image_path" not in job:
+        return "Nenhuma imagem estilizada disponível para este pedido.", 404
+    return send_file(job["image_path"], as_attachment=True, download_name=job["image_filename"], mimetype="image/png")
+
+@app.route("/download/<job_id>/imagem_pet")
+def download_pet_image(job_id):
+    job = JOBS.get(job_id)
+    if not job or job.get("status") != "done":
+        return "Relatório ainda não está pronto.", 400
+    if "pet_image_path" not in job:
+        return "Nenhuma imagem estilizada disponível para o pet neste pedido.", 404
+    return send_file(job["pet_image_path"], as_attachment=True, download_name=job["pet_image_filename"], mimetype="image/png")
+
+@app.route("/result/<job_id>")
+def result(job_id):
+    job = JOBS.get(job_id)
+    if not job:
+        return jsonify({"error": "job não encontrado"}), 404
+    if job.get("status") != "done" or "data" not in job:
+        return jsonify({"error": "Relatório ainda não está pronto."}), 400
+    return jsonify(job["data"])
 
 @app.route("/health")
 def health():
