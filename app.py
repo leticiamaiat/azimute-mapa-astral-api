@@ -15,6 +15,7 @@ import threading
 import time
 import traceback
 import uuid
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 
 import pythoncom
 from flask import Flask, request, render_template_string, send_file, jsonify
@@ -56,6 +57,31 @@ def _docx_to_pdf_safe(docx_path, pdf_path, retries=3):
                 last_err = e
                 time.sleep(2 + attempt * 2)
     raise last_err
+
+# Tempo maximo tolerado para a estilizacao de uma foto (segmentacao rembg +
+# chamada da API de imagem da OpenAI). Sem isso, uma trava de rede (ex.:
+# download do modelo do rembg ou a chamada da OpenAI sem resposta) prende o
+# job de forma indefinida na etapa "styling" - o try/except sozinho nao
+# ajuda porque uma trava nunca levanta excecao. Ultrapassado o timeout, a
+# thread de estilizacao fica orfa (Python nao mata threads), mas o job segue
+# em frente com a foto original.
+STYLE_TIMEOUT_SECONDS = 120
+
+def _stylize_with_timeout(*args, **kwargs):
+    # Nao usa ThreadPoolExecutor como context manager: seu __exit__ chama
+    # shutdown(wait=True), que bloquearia aqui ate a thread orfa terminar -
+    # exatamente a trava que este timeout existe para evitar.
+    ex = ThreadPoolExecutor(max_workers=1)
+    future = ex.submit(stylize_cover_photo, *args, **kwargs)
+    try:
+        result = future.result(timeout=STYLE_TIMEOUT_SECONDS)
+    except FutureTimeoutError:
+        ex.shutdown(wait=False)
+        raise TimeoutError(
+            f"Estilizacao da foto excedeu {STYLE_TIMEOUT_SECONDS}s (rede lenta/travada?)"
+        )
+    ex.shutdown(wait=False)
+    return result
 
 PAGE = """
 <!doctype html>
@@ -387,7 +413,7 @@ def _run_job(job_id, name, date_str, time_str, place, cover_path):
             JOBS[job_id]["status"] = "styling"
             try:
                 styled_image_path = os.path.join(os.path.dirname(cover_path), "foto_estilizada.png")
-                stylize_cover_photo(cover_path, styled_image_path)
+                _stylize_with_timeout(cover_path, styled_image_path)
                 cover_path = styled_image_path
             except Exception:
                 traceback.print_exc()
@@ -454,7 +480,7 @@ def _run_job_pet_synastry(job_id, name, date_str, time_str, place, cover_path, p
             JOBS[job_id]["status"] = "styling"
             try:
                 styled_owner_path = os.path.join(os.path.dirname(cover_path), "foto_estilizada_tutor.png")
-                stylize_cover_photo(cover_path, styled_owner_path, subject="pessoa")
+                _stylize_with_timeout(cover_path, styled_owner_path, subject="pessoa")
                 cover_path = styled_owner_path
             except Exception:
                 traceback.print_exc()
@@ -465,7 +491,7 @@ def _run_job_pet_synastry(job_id, name, date_str, time_str, place, cover_path, p
             JOBS[job_id]["status"] = "styling"
             try:
                 styled_pet_path = os.path.join(os.path.dirname(pet_cover_path), "foto_estilizada_pet.png")
-                stylize_cover_photo(pet_cover_path, styled_pet_path, subject="pet")
+                _stylize_with_timeout(pet_cover_path, styled_pet_path, subject="pet")
                 pet_cover_path = styled_pet_path
             except Exception:
                 traceback.print_exc()

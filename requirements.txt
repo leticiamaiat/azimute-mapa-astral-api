@@ -11,7 +11,7 @@ geopy==2.4.1
 matplotlib==3.10.7
 tzdata==2025.1
 pillow>=12.1.0
-rembg==2.0.81
+rembg[cpu]==2.0.81
 docx2pdf==0.1.8
 skyfield==1.55
 timezonefinder==8.2.5
